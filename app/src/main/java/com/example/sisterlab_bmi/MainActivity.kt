@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Login sayfamızda intent ile göndermiş olduğumuz kullanıcı adını bu sayfada almamız gerekiyor. (Texview tanımına gerek yok)
+        //getstringextra ile gelen veriyi, geldiği sayfada verdiğimiz key e göre değişkene atayıp çağırıyoruz.
+        //Textview'in setText metodundan yazarlanarak ekrana yazdırıyoruz.
         var twUserName = findViewById(R.id.twUserName) as TextView
         val valueName = intent.getStringExtra("UserName")
         twUserName.setText("Merhaba "+ valueName + "!")
@@ -35,18 +38,26 @@ class MainActivity : AppCompatActivity() {
         var btnCalculate = findViewById(R.id.btnCalculate) as Button
 
         btnCalculate.setOnClickListener{
+            //height ve weight değişkenlerini double (ondalıklı olarak tanımlıyoruz)
             var height : Double = etHeight.text.toString().toDouble()
             val weight : Double = etWeight.text.toString().toDouble()
             var result = 0.0
-
+            
+            //kilo ve boyumuzun 0'dan büyük olması durumunda hesaplama işlemine başlıyoruz. Eğer 0'dan küçük ise hata mesajı verecektir.
             if(height>0 && weight>0) {
+                //bu iki satır vücut kütle indeksi formülü 
                 height = height / 100
                 result = (weight / (height * height))
+                //çıkan sonucu ondalıklı olarak uygun formata çeviriyoruz. %.2f: virgülden sonra 2 basamağa kadar gösterir
                 val roundedResult = String.format("%.2f", result)
                 tvBMI.setText(roundedResult.toString())
 
+                //when() in...  : Belli aralık verilerek o aralıkta gerçekleşecek işlemleri gerçekleştirmeyi sağlar
+                //when(result): result değişkeninde yer alan değeri alıp koşullara baka.
                 when (result){
 
+                    //result değeri 0.0 ile 18.50 değeri arasında ise;
+                    //ekrana basılacak metini gösterir ve sayfanın layoutunun arkaplan rengini değiştirir.
                     in 0.0..18.50 ->
                     {
                         tvResult.text = "Zayıf!"
@@ -67,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                         tvResult.text = "Obez! "
                         screenLayout.setBackgroundColor(Color.MAGENTA)
                     }
+                    //yukarıdaki aralıklardan farklı bir sonuç geldiyse aşağıdaki sonucu verir
                     else ->
                     {
                         tvResult.text = "Aşırı Obez! "
@@ -76,12 +88,13 @@ class MainActivity : AppCompatActivity() {
     }
             else
             {
+                //alert hata,bilgi, uyarı mesajların verildiği penceredir.
                 val alert = AlertDialog.Builder(this)
-                alert.setTitle("Hata!")
-                alert.setMessage("Boy ve kilonuz 0 dan büyük olmalı")
-                alert.setCancelable(false);
-                alert.setPositiveButton("Tamam") { dialogInterface: DialogInterface, i: Int -> }
-                alert.show()
+                alert.setTitle("Hata!") //başlığın ne olacağı belirlenir.
+                alert.setMessage("Boy ve kilonuz 0 dan büyük olmalı") //verilecek mesaj yazılır
+                alert.setCancelable(false); 
+                alert.setPositiveButton("Tamam") { dialogInterface: DialogInterface, i: Int -> } //buton üzerinde yazılacak metin verilir.
+                alert.show() //ekrana götermeyi sağlar
             }
         }
     }
